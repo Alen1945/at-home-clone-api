@@ -21,6 +21,12 @@ exports.GetMessages = async (req, res, next) => {
             content: Message.messageContents
           }
         })
+      } else {
+        res.status(200).send({
+          success: false,
+          data: null,
+          msg: 'id Not Exists'
+        })
       }
     } else {
 
