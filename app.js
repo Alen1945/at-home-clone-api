@@ -9,6 +9,7 @@ const path = require('path')
 
 /* Routes */
 const UserRouters = require('./src/routes/users')
+const MessageRouters = require('./src/routes/messages')
 /* Logger */
 App.use(morgan('tiny'))
 
@@ -49,7 +50,7 @@ App.get('/', (req, res, next) => {
 
 App.use('/api', ApiRouter)
 ApiRouter.use('/users', UserRouters)
-
+ApiRouter.use('/messages', MessageRouters)
 /* Handling Not Found Routes */
 App.use((req, res, next) => {
   next(createError(404))
