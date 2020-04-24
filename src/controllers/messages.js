@@ -29,7 +29,21 @@ exports.GetMessages = async (req, res, next) => {
         })
       }
     } else {
-
+      const AllMessage = await MessageModel.findAll({
+        attributes: ['id', 'userId', 'type', 'createdAt']
+      })
+      if (AllMessage) {
+        res.status(200).send({
+          success: true,
+          data: AllMessage
+        })
+      } else {
+        res.status(200).send({
+          success: false,
+          data: null,
+          msg: 'Data Empty'
+        })
+      }
     }
   } catch (err) {
     console.log(err)
