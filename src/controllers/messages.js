@@ -1,6 +1,38 @@
 const uploads = require('../middleware/uploadFiles')
 const { alarmMessages: MessageModel, messageContents: ContentModel } = require('../models')
 
+exports.GetMessages = async (req, res, next) => {
+  try {
+    if (req.params.id) {
+      const Message = await MessageModel.findOne({
+        where: { id: req.params.id },
+        attributes: ['id', 'userId', 'type', 'createdAt'],
+        include: [
+          { model: ContentModel, attributes: ['pathContent'] }
+        ]
+      })
+      if (Message) {
+        res.status(200).send({
+          success: true,
+          data: {
+            id: Message.id,
+            userId: Message.userId,
+            type: Message.type,
+            content: Message.messageContents
+          }
+        })
+      }
+    } else {
+
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(202).send({
+      success: false,
+      msg: 'something wrong'
+    })
+  }
+}
 exports.CreateMessage = async (req, res, next) => {
   try {
     await uploads(req, res, 'dataUploads')
