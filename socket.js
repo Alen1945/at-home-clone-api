@@ -3,9 +3,6 @@ module.exports = {
   init: function (server) {
     // start socket.io server and cache io value
     io = require('socket.io')(server)
-    io.on('connection', (socket) => {
-      console.log('UserConnect')
-    })
     return io
   },
   getio: function () {

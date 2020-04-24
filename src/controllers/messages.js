@@ -1,6 +1,5 @@
 const uploads = require('../middleware/uploadFiles')
 const { alarmMessages: MessageModel, messageContents: ContentModel } = require('../models')
-
 exports.GetMessages = async (req, res, next) => {
   try {
     if (req.params.id) {
@@ -18,6 +17,7 @@ exports.GetMessages = async (req, res, next) => {
             id: Message.id,
             userId: Message.userId,
             type: Message.type,
+            createdAt: Message.createdAt,
             content: Message.messageContents
           }
         })
@@ -55,12 +55,19 @@ exports.GetMessages = async (req, res, next) => {
 }
 exports.CreateMessage = async (req, res, next) => {
   try {
+    const io = require('../../socket').getio()
     await uploads(req, res, 'dataUploads')
     if (req.files.length > 0) {
       const resultMessage = await MessageModel.create({ userId: 1, type: 'image' })
       if (resultMessage) {
         const dataContent = req.files.map((v) => ({ messageId: resultMessage.id, pathContent: '/uploads/' + v.filename }))
         await ContentModel.bulkCreate(dataContent)
+        io.emit('newMessage', JSON.stringify({
+          id: resultMessage.id,
+          userId: resultMessage.userId,
+          type: resultMessage.type,
+          createdAt: resultMessage.createdAt
+        }))
         res.send({
           success: true,
           msg: 'success uploads'

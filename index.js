@@ -17,3 +17,7 @@ server.on('error', (err) => {
   console.log('detail error', err)
   throw err
 })
+
+io.on('connection', (socket) => {
+  console.log('UserConnect')
+})
