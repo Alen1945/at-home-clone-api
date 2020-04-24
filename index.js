@@ -1,9 +1,8 @@
 require('dotenv').config()
 const App = require('./app')
 const http = require('http')
-const socket = require('socket.io')
 const server = http.createServer(App)
-const io = socket(server)
+const io = require('./socket.js').init(server)
 const port = (process.env.PORT || 6000)
 server.listen(port)
 server.on('listening', () => {
@@ -17,8 +16,4 @@ server.on('error', (err) => {
   }
   console.log('detail error', err)
   throw err
-})
-
-io.on('connection', (socket) => {
-  console.log('UserConnect')
 })
